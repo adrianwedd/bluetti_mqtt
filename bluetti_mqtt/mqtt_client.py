@@ -5,7 +5,7 @@ import json
 import logging
 import re
 from typing import List, Optional
-from asyncio_mqtt import Client, MqttError
+import aiomqtt
 from paho.mqtt.client import MQTTMessage
 from bluetti_mqtt.bus import CommandMessage, EventBus, ParserMessage
 from bluetti_mqtt.core import BluettiDevice, DeviceCommand
@@ -510,7 +510,7 @@ class MQTTClient:
         while True:
             logging.info('Connecting to MQTT broker...')
             try:
-                async with Client(
+                async with aiomqtt.aiomqtt.Client(
                     hostname=self.hostname,
                     port=self.port,
                     username=self.username,
@@ -527,7 +527,7 @@ class MQTTClient:
                         self._handle_commands(client),
                         self._handle_messages(client)
                     )
-            except MqttError:
+            except aiomqtt.aiomqtt.MqttError:
                 logging.exception('MQTT error:')
                 await asyncio.sleep(5)
 
